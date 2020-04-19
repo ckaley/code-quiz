@@ -136,69 +136,26 @@ $(document).ready(function () {
     },
   };
 
-  function displayQuestion(i) {
-    $("#quiz-question").text(quiz.quizItem[i].question);
-    $("#answer-1").text(quiz.quizItem[i].answerOne.answerText);
-    $("#answer-2").text(quiz.quizItem[i].answerTwo.answerText);
-    $("#answer-3").text(quiz.quizItem[i].answerThree.answerText);
-    $("#answer-4").text(quiz.quizItem[i].answerFour.answerText);
-
-    //console.log("QuestionNumber: " + questionNumber);
-  }
-
-  //Initialize the quiz with loading the questions and setting buttons to hidden
-  quiz.initialize();
-  $("#answer-1").hide();
-  $("#answer-2").hide();
-  $("#answer-3").hide();
-  $("#answer-4").hide();
-
-  function gameOver() {
-    $("#quiz-question").text("Game Over");
-    $("#answer-1").hide();
-    $("#answer-2").hide();
-    $("#answer-3").hide();
-    $("#answer-4").hide();
-    console.log("Game Over");
-  }
-
-  //Set the on-click event handler for when to start the quiz
-  $("#btn-start").on("click", function () {
-    $("#quiz-intro").hide();
-    $("#btn-start").hide();
-
-    //load the first questions
-    displayQuestion(questionNumber);
-
-    //Display the questions on the page
-    $("#answer-1").show();
-    $("#answer-2").show();
-    $("#answer-3").show();
-    $("#answer-4").show();
-  });
-
-  //Set event handler for the 1st answer
-  $("#answer-1").on("click", function () {
+  function answerOneEventHandler() {
     if (quiz.quizItem[questionNumber].answerOne.correct) {
       console.log(true);
       $("#right-wrong-display").text("Correct");
     } else {
       console.log(false);
-      $("#right-wrong-display").text("Wrong");
     }
     questionNumber++;
     if (questionNumber < quiz.quizItem.length) {
       //delay so the user can see if they answer correctly
       setTimeout(function () {
+        $("#right-wrong-display").text("");
         displayQuestion(questionNumber);
-      }, 100);
+      }, 150);
     } else {
       gameOver();
     }
-  });
+  }
 
-  //Set event handler for the 2nd answer
-  $("#answer-2").on("click", function () {
+  function answerTwoEventHandler() {
     if (quiz.quizItem[questionNumber].answerTwo.correct) {
       console.log(true);
       $("#right-wrong-display").text("Correct");
@@ -210,15 +167,15 @@ $(document).ready(function () {
     if (questionNumber < quiz.quizItem.length) {
       //delay so the user can see if they answer correctly
       setTimeout(function () {
+        $("#right-wrong-display").text("");
         displayQuestion(questionNumber);
-      }, 100);
+      }, 150);
     } else {
       gameOver();
     }
-  });
+  }
 
-  //Set event handler for the 3rd answer
-  $("#answer-3").on("click", function () {
+  function answerThreeEventHandler() {
     if (quiz.quizItem[questionNumber].answerThree.correct) {
       console.log(true);
       $("#right-wrong-display").text("Correct");
@@ -230,15 +187,15 @@ $(document).ready(function () {
     if (questionNumber < quiz.quizItem.length) {
       //delay so the user can see if they answer correctly
       setTimeout(function () {
+        $("#right-wrong-display").text("");
         displayQuestion(questionNumber);
-      }, 100);
+      }, 150);
     } else {
       gameOver();
     }
-  });
+  }
 
-  //Set event handler for the 4th answer
-  $("#answer-4").on("click", function () {
+  function answerFourEventHandler() {
     if (quiz.quizItem[questionNumber].answerFour.correct) {
       console.log(true);
       $("#right-wrong-display").text("Correct");
@@ -250,10 +207,96 @@ $(document).ready(function () {
     if (questionNumber < quiz.quizItem.length) {
       //delay so the user can see if they answer correctly
       setTimeout(function () {
+        $("#right-wrong-display").text("");
         displayQuestion(questionNumber);
-      }, 100);
+      }, 150);
     } else {
       gameOver();
     }
-  });
+  }
+
+  function displayQuestion(i) {
+    // clean up question display
+    $("#quiz-question").remove();
+    $("#answer-display").empty();
+
+    //Display the questions on the page
+    var question = $("<h5>");
+    question.addClass("card-body");
+    question.attr("id", "quiz-question");
+    question.text(quiz.quizItem[i].question);
+    $("#question-display").append(question);
+
+    //Prep to display answers
+    var answerOne = $("<button>");
+    var answerTwo = $("<button>");
+    var answerThree = $("<button>");
+    var answerFour = $("<button>");
+
+    answerOne.addClass("btn-block btn-primary");
+    answerTwo.addClass("btn-block btn-primary");
+    answerThree.addClass("btn-block btn-primary");
+    answerFour.addClass("btn-block btn-primary");
+
+    answerOne.attr("id", "answer-1");
+    answerTwo.attr("id", "answer-2");
+    answerThree.attr("id", "answer-3");
+    answerFour.attr("id", "answer-4");
+
+    answerOne.text(quiz.quizItem[i].answerOne.answerText);
+    answerTwo.text(quiz.quizItem[i].answerTwo.answerText);
+    answerThree.text(quiz.quizItem[i].answerThree.answerText);
+    answerFour.text(quiz.quizItem[i].answerFour.answerText);
+
+    $("#answer-display").append(answerOne);
+    $("#answer-display").append(answerTwo);
+    $("#answer-display").append(answerThree);
+    $("#answer-display").append(answerFour);
+
+    //Define on-click event handlers for the newly appended answers
+    $("#answer-1").on("click", answerOneEventHandler);
+    $("#answer-2").on("click", answerTwoEventHandler);
+    $("#answer-3").on("click", answerThreeEventHandler);
+    $("#answer-4").on("click", answerFourEventHandler);
+  }
+
+  //Initialize the quiz with loading the questions and setting buttons to hidden
+  function initialize() {
+    console.log("I am here");
+    var intro = $("<h5>");
+    intro.addClass("card-body text-center");
+    intro.attr("id", "quiz-intro");
+    intro.text(
+      "Try to answer the following Sports-related questions within the time-limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!"
+    );
+    $("#question-display").append(intro);
+
+    //Display Start button
+    var btnStart = $("<button>");
+    btnStart.addClass("btn btn-primary");
+    btnStart.attr("id", "btn-start");
+    btnStart.attr("type", "button");
+    btnStart.text("Start Quiz");
+    $("#btn-start-display").append(btnStart);
+    $("#btn-start").on("click", function () {
+      $("#quiz-intro").remove();
+      $("#btn-start").remove();
+
+      //load the first questions
+      displayQuestion(questionNumber);
+    });
+
+    quiz.initialize();
+  }
+
+  function gameOver() {
+    $("#quiz-question").text("Game Over");
+    $("#answer-1").hide();
+    $("#answer-2").hide();
+    $("#answer-3").hide();
+    $("#answer-4").hide();
+    console.log("Game Over");
+  }
+
+  initialize();
 });
