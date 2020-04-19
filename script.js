@@ -56,7 +56,7 @@ $(document).ready(function () {
       quiz.quizItem.push({
         id: "3",
         question:
-          "What MLB Baseball team loast in the Worls Series to St Louis in 7 games in 1982?",
+          "What MLB Baseball team loast in the World Series to St Louis in 7 games in 1982?",
         answerOne: { answerText: "New Your Yankees", correct: false },
         answerTwo: { answerText: "Boston Red Sox", correct: false },
         answerThree: { answerText: "Milwaukee Brewers", correct: true },
@@ -93,6 +93,17 @@ $(document).ready(function () {
         answerFour: { answerText: "Joe Sakic", correct: false },
       });
 
+      //populate quiz wuth 7th question
+      quiz.quizItem.push({
+        id: "7",
+        question:
+          "How many strike in bowling to you have to roll in a row for a Turkey?",
+        answerOne: { answerText: "2", correct: false },
+        answerTwo: { answerText: "3", correct: true },
+        answerThree: { answerText: "4", correct: false },
+        answerFour: { answerText: "10", correct: false },
+      });
+
       //populate quiz wuth 8th question
       quiz.quizItem.push({
         id: "8",
@@ -127,65 +138,122 @@ $(document).ready(function () {
 
   function displayQuestion(i) {
     $("#quiz-question").text(quiz.quizItem[i].question);
-    // var answer1 = $("<button>");
-    // var answer2 = $("<button>");
-    // var answer3 = $("<button>");
-    // var answer4 = $("<button>");
-
-    // answer1.addClass("btn-block");
-    // answer1.addClass("btn-primary");
-    // answer1.attr("type", "button");
-    // answer1.attr("id", "answer-1");
     $("#answer-1").text(quiz.quizItem[i].answerOne.answerText);
-
-    // answer2.addClass("btn-block");
-    // answer2.addClass("btn-primary");
-    // answer2.attr("type", "button");
-    // answer2.attr("id", "answer-2");
     $("#answer-2").text(quiz.quizItem[i].answerTwo.answerText);
-
-    // answer3.addClass("btn-block");
-    // answer3.addClass("btn-primary");
-    // answer3.attr("type", "button");
-    // answer3.attr("id", "answer-3");
     $("#answer-3").text(quiz.quizItem[i].answerThree.answerText);
-
-    // answer4.addClass("btn-block");
-    // answer4.addClass("btn-primary");
-    // answer4.attr("type", "button");
-    // answer4.attr("id", "answer-4");
     $("#answer-4").text(quiz.quizItem[i].answerFour.answerText);
 
-    // $("#answer-display").append(answer1);
-    // $("#answer-display").append(answer2);
-    // $("#answer-display").append(answer3);
-    // $("#answer-display").append(answer4);
-    // console.log("right here");
+    //console.log("QuestionNumber: " + questionNumber);
   }
 
+  //Initialize the quiz with loading the questions and setting buttons to hidden
   quiz.initialize();
+  $("#answer-1").hide();
+  $("#answer-2").hide();
+  $("#answer-3").hide();
+  $("#answer-4").hide();
 
+  function gameOver() {
+    $("#quiz-question").text("Game Over");
+    $("#answer-1").hide();
+    $("#answer-2").hide();
+    $("#answer-3").hide();
+    $("#answer-4").hide();
+    console.log("Game Over");
+  }
+
+  //Set the on-click event handler for when to start the quiz
   $("#btn-start").on("click", function () {
     $("#quiz-intro").hide();
     $("#btn-start").hide();
+
+    //load the first questions
     displayQuestion(questionNumber);
+
+    //Display the questions on the page
+    $("#answer-1").show();
+    $("#answer-2").show();
+    $("#answer-3").show();
+    $("#answer-4").show();
   });
 
+  //Set event handler for the 1st answer
   $("#answer-1").on("click", function () {
+    if (quiz.quizItem[questionNumber].answerOne.correct) {
+      console.log(true);
+      $("#right-wrong-display").text("Correct");
+    } else {
+      console.log(false);
+      $("#right-wrong-display").text("Wrong");
+    }
     questionNumber++;
-    displayQuestion(questionNumber);
+    if (questionNumber < quiz.quizItem.length) {
+      //delay so the user can see if they answer correctly
+      setTimeout(function () {
+        displayQuestion(questionNumber);
+      }, 100);
+    } else {
+      gameOver();
+    }
   });
 
-  //   for (var i = 0; i < quiz.quizItem.length; i++) {
-  //     console.log(quiz.quizItem[i].id);
-  //     console.log(quiz.quizItem[i].question);
-  //     console.log(quiz.quizItem[i].answerOne.answerText);
-  //     console.log(quiz.quizItem[i].answerOne.correct);
-  //     console.log(quiz.quizItem[i].answerTwo.answerText);
-  //     console.log(quiz.quizItem[i].answerTwo.correct);
-  //     console.log(quiz.quizItem[i].answerThree.answerText);
-  //     console.log(quiz.quizItem[i].answerThree.correct);
-  //     console.log(quiz.quizItem[i].answerFour.answerText);
-  //     console.log(quiz.quizItem[i].answerFour.correct);
-  //   }
+  //Set event handler for the 2nd answer
+  $("#answer-2").on("click", function () {
+    if (quiz.quizItem[questionNumber].answerTwo.correct) {
+      console.log(true);
+      $("#right-wrong-display").text("Correct");
+    } else {
+      console.log(false);
+      $("#right-wrong-display").text("Wrong");
+    }
+    questionNumber++;
+    if (questionNumber < quiz.quizItem.length) {
+      //delay so the user can see if they answer correctly
+      setTimeout(function () {
+        displayQuestion(questionNumber);
+      }, 100);
+    } else {
+      gameOver();
+    }
+  });
+
+  //Set event handler for the 3rd answer
+  $("#answer-3").on("click", function () {
+    if (quiz.quizItem[questionNumber].answerThree.correct) {
+      console.log(true);
+      $("#right-wrong-display").text("Correct");
+    } else {
+      console.log(false);
+      $("#right-wrong-display").text("Wrong");
+    }
+    questionNumber++;
+    if (questionNumber < quiz.quizItem.length) {
+      //delay so the user can see if they answer correctly
+      setTimeout(function () {
+        displayQuestion(questionNumber);
+      }, 100);
+    } else {
+      gameOver();
+    }
+  });
+
+  //Set event handler for the 4th answer
+  $("#answer-4").on("click", function () {
+    if (quiz.quizItem[questionNumber].answerFour.correct) {
+      console.log(true);
+      $("#right-wrong-display").text("Correct");
+    } else {
+      console.log(false);
+      $("#right-wrong-display").text("Wrong");
+    }
+    questionNumber++;
+    if (questionNumber < quiz.quizItem.length) {
+      //delay so the user can see if they answer correctly
+      setTimeout(function () {
+        displayQuestion(questionNumber);
+      }, 100);
+    } else {
+      gameOver();
+    }
+  });
 });
