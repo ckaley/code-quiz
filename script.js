@@ -1,7 +1,12 @@
 $(document).ready(function () {
-  //Define a QuizItem object to store the question and the correct answer
-  var questionNumber = 0;
+  //Define Global variables used for thi Quiz
+  var questionNumber = 0; //Running count for the number of questions
+  var timer = $("#timer-display"); //reference to the timer display on the page
+  var secondsLeft = 90; //Set the quiz time at 90 seconds
+  var lsScore = localStorage.setItem("score", "0"); //local storage variable for score
+  var lsInitials = localStorage.setItem("initials", ""); //local storage for initials
 
+  //Object definition for quizItem.  This is made up of a question and four answers, with one answer being correct
   var quizItem = {
     id: "",
     question: "",
@@ -23,11 +28,10 @@ $(document).ready(function () {
     },
   };
 
-  //Define quiz
+  //Object definition quiz
   var quiz = {
-    quizItem: [],
-    score: 0,
-    highscore: 0,
+    quizItem: [], //array of quizItems/Questions
+    score: 0, //quiz score
 
     //Initialize function is used to load 10 questions into the quiz
     initialize: function () {
@@ -128,7 +132,7 @@ $(document).ready(function () {
       quiz.quizItem.push({
         id: "10",
         question: "Which team won the World Series in 2019?",
-        answerOne: { answerText: "New York Yahkees", correct: false },
+        answerOne: { answerText: "New York Yankees", correct: false },
         answerTwo: { answerText: "San Francisco Giants", correct: false },
         answerThree: { answerText: "Arizona Diamondbacks", correct: false },
         answerFour: { answerText: "Washington Nationals", correct: true },
@@ -136,91 +140,117 @@ $(document).ready(function () {
     },
   };
 
+  //Define a event handler if they select the first answer
   function answerOneEventHandler() {
+    //Check to see if it is the correct answer.  If yes, display correct.
     if (quiz.quizItem[questionNumber].answerOne.correct) {
-      console.log(true);
       $("#right-wrong-display").text("Correct");
     } else {
-      console.log(false);
+      //If incorrect answer, sunbtract 10 seconds from timer and display wrong.
+      secondsLeft = secondsLeft - 10;
+      $("#right-wrong-display").text("Wrong");
     }
+    //increment the question count
     questionNumber++;
+    //If question was not the last one, delay for 150 milliseconds so they can see if they were right/wrong
     if (questionNumber < quiz.quizItem.length) {
       //delay so the user can see if they answer correctly
       setTimeout(function () {
-        $("#right-wrong-display").text("");
+        $("#right-wrong-display").text(""); //clear out the right/wrong display
+        //display the next question
         displayQuestion(questionNumber);
       }, 150);
     } else {
-      gameOver();
+      //If the last question, set the score to the number of seconds left
+      quiz.score = secondsLeft;
     }
   }
 
+  //Define a event handler if they select the second answer
   function answerTwoEventHandler() {
+    //Check to see if it is the correct answer.  If yes, display correct.
     if (quiz.quizItem[questionNumber].answerTwo.correct) {
-      console.log(true);
       $("#right-wrong-display").text("Correct");
     } else {
-      console.log(false);
+      //If incorrect answer, sunbtract 10 seconds from timer and display wrong.
+      secondsLeft = secondsLeft - 10;
       $("#right-wrong-display").text("Wrong");
     }
+    //increment the question count
     questionNumber++;
+    //If question was not the last one, delay for 150 milliseconds so they can see if they were right/wrong
     if (questionNumber < quiz.quizItem.length) {
       //delay so the user can see if they answer correctly
       setTimeout(function () {
-        $("#right-wrong-display").text("");
+        $("#right-wrong-display").text(""); //clear out the right/wrong display
+        //display the next question
         displayQuestion(questionNumber);
       }, 150);
     } else {
-      gameOver();
+      //If the last question, set the score to the number of seconds left
+      quiz.score = secondsLeft;
     }
   }
 
+  //Define a event handler if they select the third answer
   function answerThreeEventHandler() {
+    //Check to see if it is the correct answer.  If yes, display correct.
     if (quiz.quizItem[questionNumber].answerThree.correct) {
-      console.log(true);
       $("#right-wrong-display").text("Correct");
     } else {
-      console.log(false);
+      //If incorrect answer, sunbtract 10 seconds from timer and display wrong.
+      secondsLeft = secondsLeft - 10;
       $("#right-wrong-display").text("Wrong");
     }
+    //increment the question count
     questionNumber++;
+    //If question was not the last one, delay for 150 milliseconds so they can see if they were right/wrong
     if (questionNumber < quiz.quizItem.length) {
       //delay so the user can see if they answer correctly
       setTimeout(function () {
-        $("#right-wrong-display").text("");
+        $("#right-wrong-display").text(""); //clear out the right/wrong display
+        //display the next question
         displayQuestion(questionNumber);
       }, 150);
     } else {
-      gameOver();
+      //If the last question, set the score to the number of seconds left
+      quiz.score = secondsLeft;
     }
   }
 
+  //Define a event handler if they select the fourth answer
   function answerFourEventHandler() {
+    //Check to see if it is the correct answer.  If yes, display correct.
     if (quiz.quizItem[questionNumber].answerFour.correct) {
-      console.log(true);
       $("#right-wrong-display").text("Correct");
     } else {
-      console.log(false);
+      //If incorrect answer, sunbtract 10 seconds from timer and display wrong.
+      secondsLeft = secondsLeft - 10;
       $("#right-wrong-display").text("Wrong");
     }
+    //increment the question count
     questionNumber++;
+    //If question was not the last one, delay for 150 milliseconds so they can see if they were right/wrong
     if (questionNumber < quiz.quizItem.length) {
       //delay so the user can see if they answer correctly
       setTimeout(function () {
-        $("#right-wrong-display").text("");
+        $("#right-wrong-display").text(""); //clear out the right/wrong display
+        //display the next question
         displayQuestion(questionNumber);
       }, 150);
     } else {
-      gameOver();
+      //If the last question, set the score to the number of seconds left
+      quiz.score = secondsLeft;
     }
   }
 
+  //Function to display the questions and potential answers to the user.
   function displayQuestion(i) {
     // clean up question display
     $("#quiz-question").remove();
     $("#answer-display").empty();
 
-    //Display the questions on the page
+    //Display the question on the page
     var question = $("<h5>");
     question.addClass("card-body");
     question.attr("id", "quiz-question");
@@ -248,6 +278,7 @@ $(document).ready(function () {
     answerThree.text(quiz.quizItem[i].answerThree.answerText);
     answerFour.text(quiz.quizItem[i].answerFour.answerText);
 
+    //Displays the potential answers
     $("#answer-display").append(answerOne);
     $("#answer-display").append(answerTwo);
     $("#answer-display").append(answerThree);
@@ -260,9 +291,9 @@ $(document).ready(function () {
     $("#answer-4").on("click", answerFourEventHandler);
   }
 
-  //Initialize the quiz with loading the questions and setting buttons to hidden
+  //Initialize the quiz with loading the questions into the quiz and displaying the intro
   function initialize() {
-    console.log("I am here");
+    //Display Intro
     var intro = $("<h5>");
     intro.addClass("card-body text-center");
     intro.attr("id", "quiz-intro");
@@ -278,25 +309,84 @@ $(document).ready(function () {
     btnStart.attr("type", "button");
     btnStart.text("Start Quiz");
     $("#btn-start-display").append(btnStart);
+
+    //On click event for when the user clicks the submit button
     $("#btn-start").on("click", function () {
       $("#quiz-intro").remove();
       $("#btn-start").remove();
+      //start the timer for the game
+      runGame();
 
-      //load the first questions
+      //load the first question
       displayQuestion(questionNumber);
     });
 
+    //loads the questions into the quiz
     quiz.initialize();
   }
 
   function gameOver() {
-    $("#quiz-question").text("Game Over");
-    $("#answer-1").hide();
-    $("#answer-2").hide();
-    $("#answer-3").hide();
-    $("#answer-4").hide();
-    console.log("Game Over");
+    // clean up question display
+    $("#quiz-question").empty();
+    $("#answer-display").empty();
+    $("#right-wrong-display").text(""); //clear the right/worng display
+
+    //Display All Done Message
+    var allDone = $("<h5>");
+    allDone.addClass("card-body text-center");
+    allDone.attr("id", "quiz-done");
+    allDone.text("All Done!");
+    $("#question-display").append(allDone);
+
+    //Display the qQuiz Score on the page
+    var yourScore = $("<h5>");
+    yourScore.addClass("card-body");
+    yourScore.attr("id", "quiz-score");
+    yourScore.text(quiz.score);
+    $("#answer-display").append(yourScore);
+
+    var inputLabel = $("<p>");
+    inputLabel.text("Enter Initials to Track your Score: ");
+    inputLabel.attr("id", "inputLabel");
+    $("#answer-display").append(inputLabel);
+
+    //Display Request to enter Initials
+    var initials = $("<input>");
+    initials.attr("id", "initials-input");
+    initials.attr("type", "text");
+    $("#inputLabel").append(initials);
+
+    //Display submit button
+    var btnSubmit = $("<button>");
+    btnSubmit.addClass("btn btn-primary");
+    btnSubmit.attr("id", "btn-submit");
+    btnSubmit.attr("type", "button");
+    btnSubmit.text("Submit");
+    $("#inputLabel").append(btnSubmit);
+
+    //Define event handler for the Submit button with an anonymous funciton that stores the score and initials in local storage
+    $("#btn-submit").on("click", function () {
+      localStorage.setItem("initials", $("#initials-input").val());
+      localStorage.setItem("score", quiz.score);
+    });
   }
 
-  initialize();
+  //funciton to start running the timer for the game
+  function runGame() {
+    //Display time with 90 second interval
+    timer.text("Timer: " + secondsLeft);
+
+    var timerInterval = setInterval(function () {
+      secondsLeft--;
+      timer.text("Timer: " + secondsLeft);
+
+      //check to see if the last question was answered or if the seconds left is 0
+      if (secondsLeft === 0 || questionNumber >= quiz.quizItem.length) {
+        clearInterval(timerInterval);
+        gameOver(); // Game over
+      }
+    }, 1000); //interval is 1 second, or 1000 milliseconds
+  }
+
+  initialize(); //This startes the whole process of displaying the quis page.
 });
